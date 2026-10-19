@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            // includePath 实现代码补全和智能提示的头文件搜索路径
+            "includePath": [
+                "${workspaceFolder}/Middleware/CMSIS/CM3/CoreSupport",
+                "${workspaceFolder}/Middleware/CMSIS/CM3/DeviceSupport/ST/STM32F10x",
+                "${workspaceFolder}/Middleware/STM32F10x_StdPeriph_Driver/inc",
+                "${workspaceFolder}/Middleware/FreeRTOS-Kernel",
+                "${workspaceFolder}/Middleware/FreeRTOS-Kernel/include",
+                "${workspaceFolder}/Middleware/FreeRTOS-Kernel/examples/template_configuration",
+                "${workspaceFolder}/Middleware/FreeRTOS-Kernel/portable/GCC/ARM_CM3",
+                "${workspaceFolder}/"
+
+            ],
+            // defines 实现代码补全和智能提示的宏定义
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "STM32",
+                "STM32F10X_MD",
+                "USE_STDPERIPH_DRIVER"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "windows-gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

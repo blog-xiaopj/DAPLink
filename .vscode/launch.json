@@ -1,0 +1,55 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex Debug STM32",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/firmware.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "configFiles": [
+                // "${workspaceFolder}/script/stlink-dap.cfg", // DAPLink 仿真器配置
+                "${workspaceFolder}/script/cmsis-dap.cfg", // CMSIS-DAP 仿真器配置
+                // "${workspaceFolder}/script/jlink.cfg", // JLink 仿真器配置
+                "${workspaceFolder}/script/stm32f1x.cfg" // 目标芯片配置
+            ],
+            "svdFile": "${workspaceFolder}/script/STM32F103xx.svd",
+            "preLaunchTask": "make",
+            "openOCDLaunchCommands": [
+                "adapter speed 1000"
+            ],
+            // // 每次启动时，自动打开 RTT 打印
+            // "rttConfig": {
+            //     "enabled": true,
+            //     "address": "auto",
+            //     "decoders": [
+            //         {
+            //             "label": "RTT",
+            //             "port": 0,
+            //             "type": "console"
+            //         }
+            //     ]
+            // },
+            // // 每次启动时，自动打开 SWO 打印
+            // // ST-Link 第 13 脚(SWO) ←→ 目标 PB3；频率须与 swo_init 一致
+            // "swoConfig": {
+            //     "enabled": true,
+            //     "cpuFrequency": 72000000,
+            //     "swoFrequency": 1000000,
+            //     "source": "probe",
+            //     "decoders": [
+            //         {
+            //             "label": "SWO",
+            //             "type": "console",
+            //             "port": 0
+            //         }
+            //     ]
+            // }
+        }
+    ]
+}

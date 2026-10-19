@@ -1,0 +1,16 @@
+{
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "C_Cpp.default.intelliSenseMode": "gcc-arm",
+    "C_Cpp.default.cStandard": "c99",
+    "C_Cpp.default.cppStandard": "c++11",
+    // "[cpp]": {
+    //     "editor.defaultFormatter": "xaver.clang-format",
+    //     "editor.formatOnSave": true
+    // },
+    // "[c]": {
+    //     "editor.defaultFormatter": "xaver.clang-format",
+    //     "editor.formatOnSave": true
+    // },
+    // "clang-format.executable": "clang-format",
+    // "clang-format.style": "file"                  // 使用项目根目录的 
+}

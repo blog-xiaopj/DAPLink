@@ -1,0 +1,220 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceFolder}/build"
+    },
+    "tasks": [
+        {
+            "label": "clean",
+            "type": "shell",
+            // "detail": "清空所有编译文件",
+            // "command": "rm * -r",
+            "command": "cmd /c if exist * (del /f /s /q * >nul 2>&1) else (echo build folder is empty)",
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake dap_winusb",
+            "type": "shell",
+            "detail": "生成 DAP WinUSB 工程",
+            "command": "cmake",
+            "args": [
+                "-G",
+                "MinGW Makefiles",
+                "..",
+                // "-DRELEASE=ON",  // 发布版本，不包含调试信息，禁用仿真
+                // "-DBOARD_TYPE=RTT"   // RTT 打印测试工程
+                // "-DBOARD_TYPE=DAP_HID"   // DAP HID 工程
+                "-DBOARD_TYPE=DAP_WINUSB"    // DAP WinUSB 工程
+            ],
+            "dependsOn": [
+                "clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake dap_hid",
+            "type": "shell",
+            "detail": "生成 DAP HID 工程",
+            "command": "cmake",
+            "args": [
+                "-G",
+                "MinGW Makefiles",
+                "..",
+                // "-DRELEASE=ON",  // 发布版本，不包含调试信息，禁用仿真
+                "-DBOARD_TYPE=DAP_HID"   // DAP HID 工程
+            ],
+            "dependsOn": [
+                "clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake rtt",
+            "type": "shell",
+            "detail": "生成 RTT SWO 打印测试工程",
+            "command": "cmake",
+            "args": [
+                "-G",
+                "MinGW Makefiles",
+                "..",
+                // "-DRELEASE=ON",  // 发布版本，不包含调试信息，禁用仿真
+                "-DBOARD_TYPE=RTT"   // RTT 打印测试工程
+            ],
+            "dependsOn": [
+                "clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "make",
+            // "detail": "编译工程",
+            "type": "shell",
+            // "command": "make ",
+            "command": "make -j${env:NUMBER_OF_PROCESSORS}", // 多线程编译，指定编译线程数为CPU核心数
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        // {
+        //     "label": "rebuild",
+        //     // "detail": "重新编译工程",
+        //     "dependsOrder": "sequence",
+        //     "dependsOn": [
+        //         "cmake",
+        //         "make"
+        //     ],
+        //     "problemMatcher": []
+        // },
+        {
+            "label": "rebuild dap_winusb",
+            "detail": "重新编译 DAP WinUSB 工程",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "cmake dap_winusb",
+                "make"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "rebuild dap_hid",
+            "detail": "重新编译 DAP HID 工程",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "cmake dap_hid",
+                "make"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "rebuild rtt",
+            "detail": "重新编译 RTT SWO 打印测试工程",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "cmake rtt",
+                "make"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "detail": "通过 ST-Link 仿真器下载工程",
+            "label": "download by stlink-dap",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "../script/stlink-dap.cfg",  // DAPLink 仿真器配置
+                // "../script/cmsis-dap.cfg", // CMSIS-DAP 仿真器配置
+                // "../script/jlink.cfg", // JLink 仿真器配置
+                "-f",
+                "../script/stm32f1x.cfg",
+                "-c",
+                "init",
+                "-c",
+                "halt",
+                "-c",
+                "program firmware.bin 0x8000000",
+                "-c",
+                "reset",
+                "-c",
+                "shutdown"
+            ],
+            "group": "build",
+            "dependsOn": "make",
+            "problemMatcher": []
+        },
+
+        {
+            "type": "shell",
+            "detail": "通过 CMSIS-DAP 仿真器下载工程",
+            "label": "download by cmsis-dap",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "../script/stlink-dap.cfg",  // DAPLink 仿真器配置
+                // "../script/cmsis-dap.cfg", // CMSIS-DAP 仿真器配置
+                // "../script/jlink.cfg", // JLink 仿真器配置
+                "-f",
+                "../script/stm32f1x.cfg",
+                "-c",
+                "init",
+                "-c",
+                "halt",
+                "-c",
+                "program firmware.bin 0x8000000",
+                "-c",
+                "reset",
+                "-c",
+                "shutdown"
+            ],
+            "group": "build",
+            "dependsOn": "make",
+            "problemMatcher": []
+        },
+
+        {
+            "label": "rtt",
+            "type": "shell",
+            "detail": "打开RTT打印",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/script/rtt_view.ps1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "swo",
+            "type": "shell",
+            "detail": "打开SWO打印",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/script/swo_view.ps1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
